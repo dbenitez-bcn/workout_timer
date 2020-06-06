@@ -43,13 +43,13 @@ class TimerVM {
     _updateDisplayedTime(_getSnapshotTime());
   }
 
+  String getTime() {
+    return _getFormatTime(this.model.minutes, this.model.seconds);
+  }
+
   String _getSnapshotTime() {
     return _getFormatTime(
         this.modelSnapshot.minutes, this.modelSnapshot.seconds);
-  }
-
-  String getTime() {
-    return _getFormatTime(this.model.minutes, this.model.seconds);
   }
 
   void _run() {
@@ -73,6 +73,7 @@ class TimerVM {
         return getTime();
         break;
     }
+    return "Error";
   }
 
   void _setStatus(Status newStatus) {
