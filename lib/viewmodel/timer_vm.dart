@@ -25,7 +25,7 @@ class TimerVM {
 
   void stop() {
     _clearModel();
-    _sinkTime(this.getSnapshotTime());
+    _updateDisplayedTime(this._getSnapshotTime());
     this._setStatus(Status.stopped);
   }
 
@@ -37,7 +37,13 @@ class TimerVM {
     this._setStatus(Status.paused);
   }
 
-  String getSnapshotTime() {
+  void setWorkoutTime(int minutes, int seconds) {
+    this.modelSnapshot = WorkoutTimer(minutes: minutes, seconds: seconds);
+    _clearModel();
+    _updateDisplayedTime(_getSnapshotTime());
+  }
+
+  String _getSnapshotTime() {
     return _getFormatTime(
         this.modelSnapshot.minutes, this.modelSnapshot.seconds);
   }
@@ -50,7 +56,7 @@ class TimerVM {
     Timer.periodic(
       Duration(seconds: 1),
       (t) {
-        _sinkTime(_getDisplayTime());
+        _updateDisplayedTime(_getDisplayTime());
       },
     );
   }
@@ -61,7 +67,7 @@ class TimerVM {
         return _getTimer();
         break;
       case Status.stopped:
-        return getSnapshotTime();
+        return _getSnapshotTime();
         break;
       case Status.paused:
         return getTime();
@@ -98,7 +104,7 @@ class TimerVM {
       return _getFormatTime(this.model.minutes, this.model.seconds);
     } else {
       this.stop();
-      return this.getSnapshotTime();
+      return this._getSnapshotTime();
     }
   }
 
@@ -106,7 +112,7 @@ class TimerVM {
     this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
   }
 
-  void _sinkTime(String value) {
+  void _updateDisplayedTime(String value) {
     if (value != this.lastTimeValue) {
       this.lastTimeValue = value;
       this._timeController.add(value);

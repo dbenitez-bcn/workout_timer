@@ -12,7 +12,32 @@ class MainScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            SizedBox(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  child: Text("00:30"),
+                  onPressed: () {
+                    this.vm.setWorkoutTime(0, 30);
+                  },
+                ),
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  child: Text("01:00"),
+                  onPressed: () {
+                    this.vm.setWorkoutTime(1, 20);
+                  },
+                ),
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  child: Text("05:00"),
+                  onPressed: () {
+                    this.vm.setWorkoutTime(5, 20);
+                  },
+                ),
+              ],
+            ),
             SizedBox(
               width: 100,
               height: 100,
