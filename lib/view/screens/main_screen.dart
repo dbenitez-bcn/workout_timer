@@ -25,17 +25,17 @@ class MainScreen extends StatelessWidget {
                       case Status.running:
                         return StreamBuilder<String>(
                           stream: this.vm.start(),
-                          initialData: this.vm.getTime(),
+                          initialData: this.vm.getSnapshotTime(),
                           builder: (context, snapshot) {
                             return TimerDisplayer(time: snapshot.data);
                           },
                         );
                         break;
                       case Status.stopped:
-                        return TimerDisplayer(time: this.vm.getTime());
+                        return TimerDisplayer(time: this.vm.getSnapshotTime());
                         break;
                       case Status.paused:
-                        return Text("Paused");
+                        return TimerDisplayer(time: this.vm.getTime());
                         break;
                       default:
                         return Text("Errorino");

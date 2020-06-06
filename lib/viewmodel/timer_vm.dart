@@ -4,6 +4,7 @@ import 'dart:async';
 
 class TimerVM {
   WorkoutTimer model;
+  WorkoutTimer modelSnapshot;
   Status _status;
 
   StreamController<Status> _statusController;
@@ -14,10 +15,16 @@ class TimerVM {
 
   TimerVM() {
     this.model = WorkoutTimer(minutes: 0, seconds: 50);
+    this.modelSnapshot = this.model;
     this._statusController = StreamController<Status>.broadcast();
     this._timeController = StreamController<String>();
     this._setStatus(Status.stopped);
   }
+
+  void updateModel(int minutes, int seconds) {
+    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
+  }
+
 
   void stop() {
     this._setStatus(Status.stopped);
@@ -36,10 +43,15 @@ class TimerVM {
     this._statusController.add(this._status);
   }
 
+  String getSnapshotTime() {
+    return getFormatTime(
+        this.modelSnapshot.minutes, this.modelSnapshot.seconds);
+  }
+
   String getTime() {
     return getFormatTime(this.model.minutes, this.model.seconds);
   }
-  
+
   String getFormatTime(int minutes, int seconds) {
     String time = "";
 
@@ -53,10 +65,11 @@ class TimerVM {
   String formatTime(int value) {
     return value < 10 ? "0$value" : "$value";
   }
-  
+
   Stream<String> start() async* {
-    for (int i = 0; i < this.model.seconds; i++) {
-      var foo = getFormatTime(this.model.minutes, this.model.seconds - i);
+    for (int i = 0; i < this.modelSnapshot.seconds; i++) {
+      this.updateModel(this.model.minutes,this.model.seconds - 1);
+      var foo = getFormatTime(this.model.minutes, this.model.seconds);
       yield foo;
       await Future.delayed(Duration(seconds: 1));
     }
