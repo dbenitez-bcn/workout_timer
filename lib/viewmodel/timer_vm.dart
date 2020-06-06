@@ -21,11 +21,6 @@ class TimerVM {
     this._setStatus(Status.stopped);
   }
 
-  void updateModel(int minutes, int seconds) {
-    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
-  }
-
-
   void stop() {
     this._setStatus(Status.stopped);
   }
@@ -41,6 +36,11 @@ class TimerVM {
   void _setStatus(Status newStatus) {
     this._status = newStatus;
     this._statusController.add(this._status);
+  }
+
+/*
+  void updateModel(int minutes, int seconds) {
+    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
   }
 
   String getSnapshotTime() {
@@ -79,12 +79,8 @@ class TimerVM {
     await Future.delayed(Duration(seconds: 1));
     this._setStatus(Status.stopped);
   }
-
-  /*void setTime(int minutes, int seconds) {
-    this.timer = Timer(minutes: minutes, seconds: seconds);
-  }
-
 */
+
 
   void dispose() {
     this._statusController.close();
