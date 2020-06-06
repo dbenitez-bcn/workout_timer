@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:workout_timer/model/timer.dart';
+import 'package:workout_timer/model/workout_timer.dart';
 import 'dart:async';
 
 class TimerVM {
-  Timer timer;
+  WorkoutTimer timer;
   Status _status;
 
   StreamController<Status> _statusController;
@@ -13,7 +13,7 @@ class TimerVM {
   Stream<String> get time => _timeController.stream;
 
   TimerVM() {
-    this.timer = Timer(minutes: 0, seconds: 5);
+    this.timer = WorkoutTimer(minutes: 0, seconds: 5);
     this._statusController = StreamController<Status>.broadcast();
     this._timeController = StreamController<String>();
     this._setStatus(Status.stopped);
