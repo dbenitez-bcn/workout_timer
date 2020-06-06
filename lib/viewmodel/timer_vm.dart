@@ -6,35 +6,17 @@ class TimerVM {
   Timer timer;
   Status _status;
 
-  TimerVM({@required this.timer}) {
-    this._setStatus(Status.stopped);
-  }
-
-  StreamController<Status> _statusController = StreamController<Status>.broadcast();
+  StreamController<Status> _statusController;
   Stream<Status> get status => _statusController.stream;
 
-  StreamController<String> _timeController = StreamController<String>();
+  StreamController<String> _timeController;
   Stream<String> get time => _timeController.stream;
 
-  String getTime(int foo) {
-    String minutes;
-    String seconds;
-    if (this.timer.minutes < 10) {
-      minutes = "0${this.timer.minutes}";
-    } else {
-      minutes = "${this.timer.minutes}";
-    }
-
-    if (foo < 10) {
-      seconds = "0$foo";
-    } else {
-      seconds = "$foo";
-    }
-    return minutes + ":" + seconds;
-  }
-
-  void setTime(int minutes, int seconds) {
-    this.timer = Timer(minutes: minutes, seconds: seconds);
+  TimerVM() {
+    this.timer = Timer(minutes: 0, seconds: 5);
+    this._statusController = StreamController<Status>.broadcast();
+    this._timeController = StreamController<String>();
+    this._setStatus(Status.stopped);
   }
 
   void stop() {
@@ -54,6 +36,29 @@ class TimerVM {
     this._statusController.add(this._status);
   }
 
+  String getTime() {
+    return getFormatTime(this.timer.minutes, this.timer.seconds);
+  }
+  
+  String getFormatTime(int minutes, int seconds) {
+    String time = "";
+
+    time += formatTime(minutes);
+    time += ":";
+    time += formatTime(seconds);
+
+    return time;
+  }
+
+  String formatTime(int value) {
+    return value < 10 ? "0$value" : "$value";
+  }
+
+  /*void setTime(int minutes, int seconds) {
+    this.timer = Timer(minutes: minutes, seconds: seconds);
+  }
+
+
   Stream<String> start() async* {
     for (int i = 0; i < this.timer.seconds; i++) {
       yield getTime(this.timer.seconds - i);
@@ -64,7 +69,7 @@ class TimerVM {
 
     await Future.delayed(Duration(seconds: 1));
     this._setStatus(Status.stopped);
-  }
+  }*/
 
   void dispose() {
     this._statusController.close();
