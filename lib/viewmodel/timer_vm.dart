@@ -6,6 +6,7 @@ class TimerVM {
   WorkoutTimer model;
   WorkoutTimer modelSnapshot;
   Status _status;
+  String lastTimeValue;
 
   StreamController<Status> _statusController;
   Stream<Status> get status => _statusController.stream;
@@ -24,6 +25,7 @@ class TimerVM {
 
   void stop() {
     _clearModel();
+    _sinkTime(this.getSnapshotTime());
     this._setStatus(Status.stopped);
   }
 
@@ -48,7 +50,7 @@ class TimerVM {
     Timer.periodic(
       Duration(seconds: 1),
       (t) {
-        this._timeController.add(_getDisplayTime());
+        _sinkTime(_getDisplayTime());
       },
     );
   }
@@ -102,6 +104,13 @@ class TimerVM {
 
   void _updateModel(int minutes, int seconds) {
     this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
+  }
+
+  void _sinkTime(String value) {
+    if (value != this.lastTimeValue) {
+      this.lastTimeValue = value;
+      this._timeController.add(value);
+    }
   }
 
   void dispose() {
