@@ -17,31 +17,11 @@ class MainScreen extends StatelessWidget {
               width: 100,
               height: 100,
               child: Center(
-                child: StreamBuilder<Status>(
-                  stream: this.vm.status,
-                  initialData: Status.stopped,
+                child: StreamBuilder<String>(
+                  stream: this.vm.time,
+                  initialData: this.vm.getTime(),
                   builder: (context, snapshot) {
-                    switch (snapshot.data) {
-                      case Status.running:
-                        return TimerDisplayer(time: "running");
-                        /*return StreamBuilder<String>(
-                          stream: this.vm.start(),
-                          initialData: this.vm.getSnapshotTime(),
-                          builder: (context, snapshot) {
-                            return TimerDisplayer(time: snapshot.data);
-                          },
-                        );*/
-                        break;
-                      case Status.stopped:
-                        return TimerDisplayer(time: "stopped");
-                        break;
-                      case Status.paused:
-                        return TimerDisplayer(time: "paused");
-                        break;
-                      default:
-                        return Text("Errorino");
-                        break;
-                    }
+                    return TimerDisplayer(time: snapshot.data);
                   },
                 ),
               ),

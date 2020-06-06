@@ -14,14 +14,16 @@ class TimerVM {
   Stream<String> get time => _timeController.stream;
 
   TimerVM() {
-    this.model = WorkoutTimer(minutes: 0, seconds: 50);
-    this.modelSnapshot = this.model;
+    this.modelSnapshot = WorkoutTimer(minutes: 0, seconds: 5);
+    this._clearModel();
     this._statusController = StreamController<Status>.broadcast();
     this._timeController = StreamController<String>();
     this._setStatus(Status.stopped);
+    _run();
   }
 
   void stop() {
+    _clearModel();
     this._setStatus(Status.stopped);
   }
 
@@ -33,54 +35,74 @@ class TimerVM {
     this._setStatus(Status.paused);
   }
 
+  String getSnapshotTime() {
+    return _getFormatTime(
+        this.modelSnapshot.minutes, this.modelSnapshot.seconds);
+  }
+
+  String getTime() {
+    return _getFormatTime(this.model.minutes, this.model.seconds);
+  }
+
+  void _run() {
+    Timer.periodic(
+      Duration(seconds: 1),
+      (t) {
+        this._timeController.add(_getDisplayTime());
+      },
+    );
+  }
+
+  String _getDisplayTime() {
+    switch (this._status) {
+      case Status.running:
+        return _getTimer();
+        break;
+      case Status.stopped:
+        return getSnapshotTime();
+        break;
+      case Status.paused:
+        return getTime();
+        break;
+    }
+  }
+
   void _setStatus(Status newStatus) {
     this._status = newStatus;
     this._statusController.add(this._status);
   }
 
-/*
-  void updateModel(int minutes, int seconds) {
-    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
+  void _clearModel() {
+    this.model = this.modelSnapshot;
   }
 
-  String getSnapshotTime() {
-    return getFormatTime(
-        this.modelSnapshot.minutes, this.modelSnapshot.seconds);
-  }
-
-  String getTime() {
-    return getFormatTime(this.model.minutes, this.model.seconds);
-  }
-
-  String getFormatTime(int minutes, int seconds) {
+  String _getFormatTime(int minutes, int seconds) {
     String time = "";
 
-    time += formatTime(minutes);
+    time += _formatTime(minutes);
     time += ":";
-    time += formatTime(seconds);
+    time += _formatTime(seconds);
 
     return time;
   }
 
-  String formatTime(int value) {
+  String _formatTime(int value) {
     return value < 10 ? "0$value" : "$value";
   }
 
-  Stream<String> start() async* {
-    for (int i = 0; i < this.modelSnapshot.seconds; i++) {
-      this.updateModel(this.model.minutes,this.model.seconds - 1);
-      var foo = getFormatTime(this.model.minutes, this.model.seconds);
-      yield foo;
-      await Future.delayed(Duration(seconds: 1));
+  String _getTimer() {
+    if (this.model.seconds > 0) {
+      this._updateModel(this.model.minutes, this.model.seconds - 1);
+      return _getFormatTime(this.model.minutes, this.model.seconds);
+    } else {
+      this.stop();
+      return this.getSnapshotTime();
     }
-
-    yield "Time out!";
-
-    await Future.delayed(Duration(seconds: 1));
-    this._setStatus(Status.stopped);
   }
-*/
 
+  void _updateModel(int minutes, int seconds) {
+    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
+  }
 
   void dispose() {
     this._statusController.close();
