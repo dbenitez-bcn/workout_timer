@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_timer/view/widgets/time_displayer.dart';
+import 'package:workout_timer/view/widgets/workout_button.dart';
 import 'package:workout_timer/viewmodel/timer_vm.dart';
 
 class MainScreen extends StatelessWidget {
@@ -15,26 +16,17 @@ class MainScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                MaterialButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text("00:30"),
+                WorkoutButtonActive(
+                  text: "00:30",
+                ),
+                WorkoutButtonEnable(
+                  text: "01:00",
                   onPressed: () {
-                    this.vm.setWorkoutTime(0, 30);
+                    this.vm.setWorkoutTime(1, 0);
                   },
                 ),
-                MaterialButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text("01:00"),
-                  onPressed: () {
-                    this.vm.setWorkoutTime(1, 20);
-                  },
-                ),
-                MaterialButton(
-                  color: Theme.of(context).primaryColor,
-                  child: Text("05:00"),
-                  onPressed: () {
-                    this.vm.setWorkoutTime(5, 20);
-                  },
+                WorkoutButtonDisable(
+                  text: "05:00",
                 ),
               ],
             ),
