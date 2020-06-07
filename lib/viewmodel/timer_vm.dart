@@ -1,5 +1,6 @@
-import 'package:workout_timer/model/workout_timer.dart';
 import 'dart:async';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:workout_timer/model/workout_timer.dart';
 
 class TimerVM {
   WorkoutTimer _model;
@@ -94,6 +95,9 @@ class TimerVM {
       if (this._model.minutes > 0 && this._model.seconds == 0) {
         this._updateModel(this._model.minutes - 1, 59, this._model.round);
       } else if (this._model.seconds > 0) {
+        if (this._model.seconds == 3) {
+          AssetsAudioPlayer.playAndForget(Audio("assets/go.mp3"));
+        }
         this._updateModel(
             this._model.minutes, this._model.seconds - 1, this._model.round);
       } else {
