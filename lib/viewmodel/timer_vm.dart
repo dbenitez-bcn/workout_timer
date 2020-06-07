@@ -46,15 +46,14 @@ class TimerVM {
     return _getFormatTime(this._model.minutes, this._model.seconds);
   }
 
-  String _getSnapshotTime() {
-    return _getFormatTime(
-        this._modelSnapshot.minutes, this._modelSnapshot.seconds);
+  String getRound() {
+    return "${this._model.round}";
   }
 
   void _run() {
     Timer.periodic(
       Duration(seconds: 1),
-      (t) {
+          (t) {
         _updateDisplayedTime(_getDisplayTime());
       },
     );
@@ -75,13 +74,9 @@ class TimerVM {
     return "Error";
   }
 
-  void _setStatus(Status newStatus) {
-    this._status = newStatus;
-    this._statusController.add(this._status);
-  }
-
-  void _clearModel() {
-    this._model = this._modelSnapshot;
+  String _getSnapshotTime() {
+    return _getFormatTime(
+        this._modelSnapshot.minutes, this._modelSnapshot.seconds);
   }
 
   String _getFormatTime(int minutes, int seconds) {
@@ -92,10 +87,6 @@ class TimerVM {
     time += _formatTime(seconds);
 
     return time;
-  }
-
-  String _formatTime(int value) {
-    return value < 10 ? "0$value" : "$value";
   }
 
   String _getTimer() {
@@ -109,6 +100,19 @@ class TimerVM {
       this.stop();
       return this._getSnapshotTime();
     }
+  }
+
+  void _setStatus(Status newStatus) {
+    this._status = newStatus;
+    this._statusController.add(this._status);
+  }
+
+  void _clearModel() {
+    this._model = this._modelSnapshot;
+  }
+
+  String _formatTime(int value) {
+    return value < 10 ? "0$value" : "$value";
   }
 
   void _updateModel(int minutes, int seconds) {
