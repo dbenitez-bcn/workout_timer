@@ -5,7 +5,7 @@ class WorkoutTimer {
   int seconds;
   int round;
 
-  WorkoutTimer({@required this.minutes, @required this.seconds, this.round = 5})
+  WorkoutTimer({@required this.minutes, @required this.seconds, this.round = -1})
       : assert(minutes <= 99),
         assert(seconds < 60);
 }

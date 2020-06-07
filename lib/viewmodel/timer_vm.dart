@@ -47,13 +47,13 @@ class TimerVM {
   }
 
   String getRound() {
-    return "${this._model.round}";
+    return this._model.round < 0 ? "∞" : "${this._model.round}";
   }
 
   void _run() {
     Timer.periodic(
       Duration(seconds: 1),
-          (t) {
+      (t) {
         _updateDisplayedTime(_getDisplayTime());
       },
     );
@@ -90,11 +90,16 @@ class TimerVM {
   }
 
   String _getTimer() {
-    if (this._model.minutes > 0 && this._model.seconds == 0) {
-      this._updateModel(this._model.minutes - 1, 59);
-      return _getFormatTime(this._model.minutes, this._model.seconds);
-    } else if (this._model.seconds > 0) {
-      this._updateModel(this._model.minutes, this._model.seconds - 1);
+    if (this._model.round != 0) {
+      if (this._model.minutes > 0 && this._model.seconds == 0) {
+        this._updateModel(this._model.minutes - 1, 59, this._model.round);
+      } else if (this._model.seconds > 0) {
+        this._updateModel(
+            this._model.minutes, this._model.seconds - 1, this._model.round);
+      } else {
+        this._updateModel(this._modelSnapshot.minutes,
+            this._modelSnapshot.seconds - 1, this._model.round - 1);
+      }
       return _getFormatTime(this._model.minutes, this._model.seconds);
     } else {
       this.stop();
@@ -115,8 +120,9 @@ class TimerVM {
     return value < 10 ? "0$value" : "$value";
   }
 
-  void _updateModel(int minutes, int seconds) {
-    this._model = WorkoutTimer(minutes: minutes, seconds: seconds);
+  void _updateModel(int minutes, int seconds, int round) {
+    this._model =
+        WorkoutTimer(minutes: minutes, seconds: seconds, round: round);
   }
 
   void _updateDisplayedTime(String value) {
