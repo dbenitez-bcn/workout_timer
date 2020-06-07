@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:workout_timer/model/workout_timer.dart';
 
 class TimerVM {
@@ -7,6 +7,7 @@ class TimerVM {
   WorkoutTimer _modelSnapshot;
   Status _status;
   String _lastTimeValue;
+  AudioPlayer _audioPlugin;
 
   StreamController<Status> _statusController;
   Stream<Status> get status => _statusController.stream;
@@ -20,6 +21,7 @@ class TimerVM {
     this._statusController = StreamController<Status>.broadcast();
     this._timeController = StreamController<String>();
     this._setStatus(Status.stopped);
+    this._audioPlugin = AudioPlayer();
     _run();
   }
 
@@ -96,7 +98,8 @@ class TimerVM {
         this._updateModel(this._model.minutes - 1, 59, this._model.round);
       } else if (this._model.seconds > 0) {
         if (this._model.seconds == 3) {
-          AssetsAudioPlayer.playAndForget(Audio("assets/go.mp3"));
+
+          //this._audioPlugin.play("$_basePath/assets/go.mp3", isLocal: true);
         }
         this._updateModel(
             this._model.minutes, this._model.seconds - 1, this._model.round);
