@@ -30,18 +30,15 @@ class MainScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Center(
-                child: StreamBuilder<String>(
-                  stream: this.vm.time,
-                  initialData: this.vm.getTime(),
-                  builder: (context, snapshot) {
-                    return TimerDisplayer(time: snapshot.data);
-                  },
-                ),
-              ),
+            StreamBuilder<String>(
+              stream: this.vm.time,
+              initialData: this.vm.getTime(),
+              builder: (context, snapshot) {
+                return TimerDisplayer(
+                  time: snapshot.data,
+                  round: this.vm.getRound(),
+                );
+              },
             ),
             StreamBuilder<Status>(
               stream: this.vm.status,
