@@ -2,10 +2,10 @@ import 'package:workout_timer/model/workout_timer.dart';
 import 'dart:async';
 
 class TimerVM {
-  WorkoutTimer model;
-  WorkoutTimer modelSnapshot;
+  WorkoutTimer _model;
+  WorkoutTimer _modelSnapshot;
   Status _status;
-  String lastTimeValue;
+  String _lastTimeValue;
 
   StreamController<Status> _statusController;
   Stream<Status> get status => _statusController.stream;
@@ -14,7 +14,7 @@ class TimerVM {
   Stream<String> get time => _timeController.stream;
 
   TimerVM() {
-    this.modelSnapshot = WorkoutTimer(minutes: 0, seconds: 5);
+    this._modelSnapshot = WorkoutTimer(minutes: 0, seconds: 5);
     this._clearModel();
     this._statusController = StreamController<Status>.broadcast();
     this._timeController = StreamController<String>();
@@ -37,18 +37,18 @@ class TimerVM {
   }
 
   void setWorkoutTime(int minutes, int seconds) {
-    this.modelSnapshot = WorkoutTimer(minutes: minutes, seconds: seconds);
+    this._modelSnapshot = WorkoutTimer(minutes: minutes, seconds: seconds);
     _clearModel();
     _updateDisplayedTime(_getSnapshotTime());
   }
 
   String getTime() {
-    return _getFormatTime(this.model.minutes, this.model.seconds);
+    return _getFormatTime(this._model.minutes, this._model.seconds);
   }
 
   String _getSnapshotTime() {
     return _getFormatTime(
-        this.modelSnapshot.minutes, this.modelSnapshot.seconds);
+        this._modelSnapshot.minutes, this._modelSnapshot.seconds);
   }
 
   void _run() {
@@ -81,7 +81,7 @@ class TimerVM {
   }
 
   void _clearModel() {
-    this.model = this.modelSnapshot;
+    this._model = this._modelSnapshot;
   }
 
   String _getFormatTime(int minutes, int seconds) {
@@ -99,12 +99,12 @@ class TimerVM {
   }
 
   String _getTimer() {
-    if (this.model.minutes > 0 && this.model.seconds == 0) {
-      this._updateModel(this.model.minutes - 1, 59);
-      return _getFormatTime(this.model.minutes, this.model.seconds);
-    } else if (this.model.seconds > 0) {
-      this._updateModel(this.model.minutes, this.model.seconds - 1);
-      return _getFormatTime(this.model.minutes, this.model.seconds);
+    if (this._model.minutes > 0 && this._model.seconds == 0) {
+      this._updateModel(this._model.minutes - 1, 59);
+      return _getFormatTime(this._model.minutes, this._model.seconds);
+    } else if (this._model.seconds > 0) {
+      this._updateModel(this._model.minutes, this._model.seconds - 1);
+      return _getFormatTime(this._model.minutes, this._model.seconds);
     } else {
       this.stop();
       return this._getSnapshotTime();
@@ -112,12 +112,12 @@ class TimerVM {
   }
 
   void _updateModel(int minutes, int seconds) {
-    this.model = WorkoutTimer(minutes: minutes, seconds: seconds);
+    this._model = WorkoutTimer(minutes: minutes, seconds: seconds);
   }
 
   void _updateDisplayedTime(String value) {
-    if (value != this.lastTimeValue) {
-      this.lastTimeValue = value;
+    if (value != this._lastTimeValue) {
+      this._lastTimeValue = value;
       this._timeController.add(value);
     }
   }
