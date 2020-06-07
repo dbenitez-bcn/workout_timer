@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:workout_timer/model/workout_timer.dart';
 import 'dart:async';
 
@@ -100,7 +99,10 @@ class TimerVM {
   }
 
   String _getTimer() {
-    if (this.model.seconds > 0) {
+    if (this.model.minutes > 0 && this.model.seconds == 0) {
+      this._updateModel(this.model.minutes - 1, 59);
+      return _getFormatTime(this.model.minutes, this.model.seconds);
+    } else if (this.model.seconds > 0) {
       this._updateModel(this.model.minutes, this.model.seconds - 1);
       return _getFormatTime(this.model.minutes, this.model.seconds);
     } else {
