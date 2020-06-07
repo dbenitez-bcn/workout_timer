@@ -16,8 +16,11 @@ class MainScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                WorkoutButtonActive(
+                WorkoutButtonEnable(
                   text: "00:30",
+                  onPressed: () {
+                    this.vm.setWorkoutTime(0, 30);
+                  },
                 ),
                 WorkoutButtonEnable(
                   text: "01:00",
@@ -25,8 +28,11 @@ class MainScreen extends StatelessWidget {
                     this.vm.setWorkoutTime(1, 0);
                   },
                 ),
-                WorkoutButtonDisable(
+                WorkoutButtonEnable(
                   text: "05:00",
+                  onPressed: () {
+                    this.vm.setWorkoutTime(5, 0);
+                  },
                 ),
               ],
             ),

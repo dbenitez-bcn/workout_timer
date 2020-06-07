@@ -3,7 +3,8 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:workout_timer/model/workout_timer.dart';
 
 class TimerVM {
-  final goSoundUrl = "https://raw.githubusercontent.com/dbenitez-bcn/workout_timer/master/assets/go.mp3";
+  final goSoundUrl =
+      "https://raw.githubusercontent.com/dbenitez-bcn/workout_timer/master/assets/go.mp3";
   WorkoutTimer _model;
   WorkoutTimer _modelSnapshot;
   Status _status;
@@ -91,7 +92,6 @@ class TimerVM {
     time += _formatTime(seconds);
 
     return time;
-
   }
 
   String _getTimer() {
@@ -99,14 +99,14 @@ class TimerVM {
       if (this._model.minutes > 0 && this._model.seconds == 0) {
         this._updateModel(this._model.minutes - 1, 59, this._model.round);
       } else if (this._model.seconds > 0) {
-        if (this._model.seconds == 3) {
-          this._audioPlugin.play(goSoundUrl);
-        }
         this._updateModel(
             this._model.minutes, this._model.seconds - 1, this._model.round);
       } else {
         this._updateModel(this._modelSnapshot.minutes,
             this._modelSnapshot.seconds - 1, this._model.round - 1);
+      }
+      if (this._model.minutes == 0 && this._model.seconds == 2) {
+        this._audioPlugin.play(goSoundUrl);
       }
       return _getFormatTime(this._model.minutes, this._model.seconds);
     } else {
