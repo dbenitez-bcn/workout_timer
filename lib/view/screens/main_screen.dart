@@ -20,6 +20,7 @@ class MainScreen extends StatelessWidget {
               stream: this.vm.status,
               initialData: Status.stopped,
               builder: (context, snapshot) {
+                final appStatus = snapshot.data;
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -29,21 +30,27 @@ class MainScreen extends StatelessWidget {
                         children: <Widget>[
                           WorkoutButtonEnable(
                             text: "00:30",
-                            onPressed: () {
-                              this.vm.setWorkoutTime(0, 30);
-                            },
+                            onPressed: appStatus == Status.stopped
+                                ? () {
+                                    this.vm.setWorkoutTime(0, 30);
+                                  }
+                                : null,
                           ),
                           WorkoutButtonEnable(
                             text: "01:00",
-                            onPressed: () {
-                              this.vm.setWorkoutTime(1, 0);
-                            },
+                            onPressed: appStatus == Status.stopped
+                                ? () {
+                                    this.vm.setWorkoutTime(1, 0);
+                                  }
+                                : null,
                           ),
                           WorkoutButtonEnable(
                             text: "05:00",
-                            onPressed: () {
-                              this.vm.setWorkoutTime(5, 0);
-                            },
+                            onPressed: appStatus == Status.stopped
+                                ? () {
+                                    this.vm.setWorkoutTime(5, 0);
+                                  }
+                                : null,
                           ),
                         ],
                       ),
@@ -63,7 +70,7 @@ class MainScreen extends StatelessWidget {
                           MaterialButton(
                             color: Theme.of(context).primaryColor,
                             child: Text("Stop"),
-                            onPressed: snapshot.data != Status.stopped
+                            onPressed: appStatus != Status.stopped
                                 ? () {
                                     this.vm.stop();
                                   }
@@ -74,11 +81,10 @@ class MainScreen extends StatelessWidget {
                           ),
                           MaterialButton(
                             color: Theme.of(context).primaryColor,
-                            child: Text(snapshot.data == Status.running
-                                ? "Pause"
-                                : "Play"),
+                            child: Text(
+                                appStatus == Status.running ? "Pause" : "Play"),
                             onPressed: () {
-                              if (snapshot.data == Status.running) {
+                              if (appStatus == Status.running) {
                                 this.vm.pause();
                               } else {
                                 this.vm.play();
