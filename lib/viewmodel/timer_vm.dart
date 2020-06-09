@@ -114,7 +114,7 @@ class TimerVM {
             this._model.minutes, this._model.seconds - 1, this._model.round);
       } else {
         this._updateModel(this._modelSnapshot.minutes,
-            this._modelSnapshot.seconds - 1, this._model.round - 1);
+            this._modelSnapshot.seconds, this._model.round - 1);
       }
       if (this._model.minutes == 0 && this._model.seconds == 2) {
         this._audioPlugin.play(this._goPath, isLocal: true);
