@@ -16,48 +16,48 @@ class MainScreen extends StatelessWidget {
           return AnimatedOpacity(
             opacity: isDone ? 1 : 0,
             duration: Duration(milliseconds: 500),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Row(
+            child: StreamBuilder(
+              stream: this.vm.status,
+              initialData: Status.stopped,
+              builder: (context, snapshot) {
+                return Center(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      WorkoutButtonEnable(
-                        text: "00:30",
-                        onPressed: () {
-                          this.vm.setWorkoutTime(0, 30);
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          WorkoutButtonEnable(
+                            text: "00:30",
+                            onPressed: () {
+                              this.vm.setWorkoutTime(0, 30);
+                            },
+                          ),
+                          WorkoutButtonEnable(
+                            text: "01:00",
+                            onPressed: () {
+                              this.vm.setWorkoutTime(1, 0);
+                            },
+                          ),
+                          WorkoutButtonEnable(
+                            text: "05:00",
+                            onPressed: () {
+                              this.vm.setWorkoutTime(5, 0);
+                            },
+                          ),
+                        ],
+                      ),
+                      StreamBuilder<String>(
+                        stream: this.vm.time,
+                        initialData: this.vm.getTime(),
+                        builder: (context, snapshot) {
+                          return TimerDisplayer(
+                            time: snapshot.data,
+                            round: this.vm.getRound(),
+                          );
                         },
                       ),
-                      WorkoutButtonEnable(
-                        text: "01:00",
-                        onPressed: () {
-                          this.vm.setWorkoutTime(1, 0);
-                        },
-                      ),
-                      WorkoutButtonEnable(
-                        text: "05:00",
-                        onPressed: () {
-                          this.vm.setWorkoutTime(5, 0);
-                        },
-                      ),
-                    ],
-                  ),
-                  StreamBuilder<String>(
-                    stream: this.vm.time,
-                    initialData: this.vm.getTime(),
-                    builder: (context, snapshot) {
-                      return TimerDisplayer(
-                        time: snapshot.data,
-                        round: this.vm.getRound(),
-                      );
-                    },
-                  ),
-                  StreamBuilder<Status>(
-                    stream: this.vm.status,
-                    initialData: Status.stopped,
-                    builder: (context, snapshot) {
-                      return Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           MaterialButton(
@@ -86,11 +86,11 @@ class MainScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           );
         },
