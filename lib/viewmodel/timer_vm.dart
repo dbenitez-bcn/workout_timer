@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:workout_timer/model/workout_timer.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 class TimerVM {
-  final goSoundUrl =
-      "https://raw.githubusercontent.com/dbenitez-bcn/workout_timer/master/assets/go.mp3";
+  String _goPath;
   WorkoutTimer _model;
   WorkoutTimer _modelSnapshot;
   Status _status;
@@ -25,6 +28,14 @@ class TimerVM {
     this._setStatus(Status.stopped);
     this._audioPlugin = AudioPlayer();
     _run();
+  }
+
+  Future<void> load() async {
+    final filename = 'go.mp3';
+    var bytes = await rootBundle.load("assets/go.mp3");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    this._goPath = '$dir/$filename';
+    await _writeToFile(bytes, '$dir/$filename');
   }
 
   void stop() {
@@ -106,7 +117,7 @@ class TimerVM {
             this._modelSnapshot.seconds - 1, this._model.round - 1);
       }
       if (this._model.minutes == 0 && this._model.seconds == 2) {
-        this._audioPlugin.play(goSoundUrl);
+        this._audioPlugin.play(this._goPath, isLocal: true);
       }
       return _getFormatTime(this._model.minutes, this._model.seconds);
     } else {
@@ -143,6 +154,12 @@ class TimerVM {
   void dispose() {
     this._statusController.close();
     this._timeController.close();
+  }
+
+  Future<void> _writeToFile(ByteData data, String path) async {
+    final buffer = data.buffer;
+    new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 }
 
