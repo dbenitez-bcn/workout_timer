@@ -20,7 +20,7 @@ class TimerDisplayer extends StatelessWidget {
         ),
         Text(
           this.round,
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
       ],
     );
