@@ -61,6 +61,7 @@ class MainScreen extends StatelessWidget {
                           return TimerDisplayer(
                             time: snapshot.data,
                             round: this.vm.getRound(),
+                            percentage: this.vm.getPercentage(),
                           );
                         },
                       ),

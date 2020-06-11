@@ -66,6 +66,17 @@ class TimerVM {
     return this._model.round < 0 ? "∞" : "${this._model.round}";
   }
 
+  double getPercentage() {
+    var foo = ((this._getTimeInSeconds(this._model) * 100) /
+            this._getTimeInSeconds(this._modelSnapshot)) *
+        0.01;
+    return 1.0 - foo;
+  }
+
+  int _getTimeInSeconds(WorkoutTimer workoutTimer) {
+    return (60 * workoutTimer.minutes) + workoutTimer.seconds;
+  }
+
   void _run() {
     Timer.periodic(
       Duration(seconds: 1),
@@ -151,15 +162,15 @@ class TimerVM {
     }
   }
 
-  void dispose() {
-    this._statusController.close();
-    this._timeController.close();
-  }
-
   Future<void> _writeToFile(ByteData data, String path) async {
     final buffer = data.buffer;
     new File(path).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
+
+  void dispose() {
+    this._statusController.close();
+    this._timeController.close();
   }
 }
 
