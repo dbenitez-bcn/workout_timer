@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:workout_timer/view/bloc/timer_bloc.dart';
+import 'package:workout_timer/viewmodel/timer_vm.dart';
+
 class AnimatedCountdown extends StatefulWidget {
   final int minutes;
   final int seconds;
@@ -68,6 +71,8 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
+    TimerVM vm = TimerBloc.of(context).vm;
+
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,8 +115,19 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              MaterialButton(
+                color: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.stop,
+                  color: Colors.white,
+                ),
+                onPressed: vm.stop,
+              ),
+              SizedBox(
+                width: 25,
+              ),
               MaterialButton(
                 color: Theme.of(context).primaryColor,
                 child: Icon(
@@ -125,6 +141,12 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 

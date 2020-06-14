@@ -10,55 +10,54 @@ class StoppedCountdown extends StatelessWidget {
     TimerVM vm = TimerBloc.of(context).vm;
 
     return StreamBuilder<WorkoutTimerDTO>(
-        stream: vm.workoutTimer,
-        initialData: WorkoutTimerDTO(vm.getMinutes(), vm.getSeconds()),
-        builder: (context, snapshot) {
-          return Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(),
-                Align(
-                  alignment: FractionalOffset.center,
-                  child: AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: TimerPainter(),
-                          ),
+      stream: vm.workoutTimer,
+      initialData: WorkoutTimerDTO(vm.getMinutes(), vm.getSeconds()),
+      builder: (context, snapshot) {
+        return Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(),
+              Align(
+                alignment: FractionalOffset.center,
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: TimerPainter(),
                         ),
-                        Align(
-                          alignment: FractionalOffset.center,
-                          child: Text(
-                            '${(snapshot.data.minutes).toString().padLeft(2, '0')}:${(snapshot.data.seconds).toString().padLeft(2, '0')}',
-                            style: themeData.textTheme.headline1,
-                          ),
+                      ),
+                      Align(
+                        alignment: FractionalOffset.center,
+                        child: Text(
+                          '${(snapshot.data.minutes).toString().padLeft(2, '0')}:${(snapshot.data.seconds).toString().padLeft(2, '0')}',
+                          style: themeData.textTheme.headline1,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    MaterialButton(
-                      color: Theme.of(context).primaryColor,
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        print("call play");
-                      },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  MaterialButton(
+                    color: Theme.of(context).primaryColor,
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
+                    onPressed: vm.play,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

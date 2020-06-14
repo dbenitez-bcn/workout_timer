@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workout_timer/model/workout_timer_dto.dart';
 import 'package:workout_timer/view/bloc/timer_bloc.dart';
-import 'package:workout_timer/view/widgets/animated_countdown.dart';
-import 'package:workout_timer/view/widgets/stopped_countdown.dart';
+import 'package:workout_timer/view/widgets/countdown.dart';
 import 'package:workout_timer/view/widgets/time_selector.dart';
 import 'package:workout_timer/viewmodel/timer_vm.dart';
 
@@ -30,7 +28,7 @@ class MainScreenBuilder extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   TimeSelector(),
-                  StoppedCountdown(),
+                  Countdown(),
                 ],
               ),
             ),

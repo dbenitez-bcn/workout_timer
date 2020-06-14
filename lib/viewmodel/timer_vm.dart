@@ -21,8 +21,8 @@ class TimerVM {
 
   TimerVM() {
     this._model = WorkoutTimer(minutes: 0, seconds: 5);
-    this._statusController = StreamController<Status>();
-    this._workoutTimerController = StreamController<WorkoutTimerDTO>();
+    this._statusController = StreamController<Status>.broadcast();
+    this._workoutTimerController = StreamController<WorkoutTimerDTO>.broadcast();
     this._audioPlugin = AudioPlayer();
   }
 
@@ -76,6 +76,7 @@ class TimerVM {
 
   void dispose() {
     this._statusController.close();
+    this._workoutTimerController.close();
   }
 }
 
