@@ -8,20 +8,43 @@ class AnimatedCountdown extends StatefulWidget {
 
 class AnimatedCountdownState extends State<AnimatedCountdown>
     with TickerProviderStateMixin {
-  AnimationController controller;
+  AnimationController _controller;
+  bool _isPlaying = false;
 
   String get timerString {
-    Duration duration = controller.duration * controller.value;
+    Duration duration = _controller.duration * _controller.value;
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
+  void _toggleStatus() {
+    setState(() {
+      this._isPlaying ? this._stop() : this._play();
+    });
+  }
+
+  void _play() {
+    this._isPlaying = true;
+    _controller.reverse(from: _controller.value == 0.0 ? 1.0 : _controller.value);
+  }
+
+  void _stop() {
+    this._isPlaying = false;
+    _controller.stop(canceled: true);
   }
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
+    _controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 10),
     );
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.dismissed) {
+        setState(() => _isPlaying = false);
+      }
+    });
+    _play();
   }
 
   @override
@@ -40,11 +63,11 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
                 children: <Widget>[
                   Positioned.fill(
                     child: AnimatedBuilder(
-                      animation: controller,
+                      animation: _controller,
                       builder: (BuildContext context, Widget child) {
                         return CustomPaint(
                           painter: TimerPainter(
-                            animation: controller,
+                            animation: _controller,
                             backgroundColor: Colors.grey[300],
                             color: themeData.indicatorColor,
                           ),
@@ -55,11 +78,11 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
                   Align(
                     alignment: FractionalOffset.center,
                     child: AnimatedBuilder(
-                      animation: controller,
+                      animation: _controller,
                       builder: (BuildContext context, Widget child) {
                         return Text(
                           timerString,
-                          style: themeData.textTheme.display4,
+                          style: themeData.textTheme.headline1,
                         );
                       },
                     ),
@@ -68,33 +91,19 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FloatingActionButton(
-                  child: AnimatedBuilder(
-                    animation: controller,
-                    builder: (BuildContext context, Widget child) {
-                      return Icon(controller.isAnimating
-                          ? Icons.pause
-                          : Icons.play_arrow);
-                    },
-                  ),
-                  onPressed: () {
-                    if (controller.isAnimating) {
-                      controller.stop(canceled: true);
-                    } else {
-                      controller.reverse(
-                          from:
-                          controller.value == 0.0 ? 1.0 : controller.value);
-                    }
-                  },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              MaterialButton(
+                color: Theme.of(context).primaryColor,
+                child: Icon(
+                  this._isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-          )
+                onPressed: _toggleStatus,
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -122,7 +131,7 @@ class TimerPainter extends CustomPainter {
     canvas.drawCircle(size.center(Offset.zero), size.width / 2.0, paint);
     paint.color = color;
     double progress = (1.0 - animation.value) * 2 * math.pi;
-    canvas.drawArc(Offset.zero & size, math.pi * 1.5, -progress, false, paint);
+    canvas.drawArc(Offset.zero & size, math.pi * 1.5, progress, false, paint);
   }
 
   @override
