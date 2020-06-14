@@ -8,11 +8,17 @@ class AnimatedCountdown extends StatefulWidget {
 
 class AnimatedCountdownState extends State<AnimatedCountdown>
     with TickerProviderStateMixin {
+
   AnimationController _controller;
   bool _isPlaying = false;
+  bool _goPlayed = false;
 
   String get timerString {
     Duration duration = _controller.duration * _controller.value;
+    if (duration.inSeconds == 2 && !_goPlayed) {
+      this._goPlayed = true;
+      print("Playing song!");
+    }
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
@@ -32,16 +38,20 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
     _controller.stop(canceled: true);
   }
 
+  void _restart() {
+    this._goPlayed = false;
+    _play();
+  }
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 10),
+      duration: Duration(seconds: 4),
     );
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.dismissed) {
-        setState(() => _isPlaying = false);
+        _restart();
       }
     });
     _play();
