@@ -25,7 +25,7 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
       // TODO: Play song here!
       print("Playing song!");
     }
-    return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+    return '${(duration.inMinutes).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
   void _toggleStatus() {
