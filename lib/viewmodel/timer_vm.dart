@@ -42,8 +42,8 @@ class TimerVM {
     this._setStatus(Status.running);
   }
 
-  void pause() {
-    this._setStatus(Status.paused);
+  void playGoSound() {
+    this._audioPlugin.play(_goPath, isLocal: true);
   }
 
   void setWorkoutTime(int minutes, int seconds) {

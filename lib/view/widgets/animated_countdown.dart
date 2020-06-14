@@ -18,6 +18,7 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
     with TickerProviderStateMixin {
 
   AnimationController _controller;
+  TimerVM vm;
   bool _isPlaying = false;
   bool _goPlayed = false;
 
@@ -25,8 +26,7 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
     Duration duration = _controller.duration * _controller.value;
     if (duration.inSeconds == 2 && !_goPlayed) {
       this._goPlayed = true;
-      // TODO: Play song here!
-      print("Playing song!");
+      vm.playGoSound();
     }
     return '${(duration.inMinutes).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
@@ -71,7 +71,7 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    TimerVM vm = TimerBloc.of(context).vm;
+    vm = TimerBloc.of(context).vm;
 
     return Expanded(
       child: Column(
