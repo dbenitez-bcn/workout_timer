@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class AnimatedCountdown extends StatefulWidget {
+  final int minutes;
+  final int seconds;
+
+  AnimatedCountdown({@required this.minutes, @required this.seconds});
+
   @override
   AnimatedCountdownState createState() => AnimatedCountdownState();
 }
@@ -17,6 +22,7 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
     Duration duration = _controller.duration * _controller.value;
     if (duration.inSeconds == 2 && !_goPlayed) {
       this._goPlayed = true;
+      // TODO: Play song here!
       print("Playing song!");
     }
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
@@ -30,7 +36,8 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
 
   void _play() {
     this._isPlaying = true;
-    _controller.reverse(from: _controller.value == 0.0 ? 1.0 : _controller.value);
+    _controller.reverse(
+        from: _controller.value == 0.0 ? 1.0 : _controller.value);
   }
 
   void _stop() {
@@ -42,12 +49,13 @@ class AnimatedCountdownState extends State<AnimatedCountdown>
     this._goPlayed = false;
     _play();
   }
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 4),
+      duration: Duration(minutes: widget.minutes, seconds: widget.seconds),
     );
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.dismissed) {

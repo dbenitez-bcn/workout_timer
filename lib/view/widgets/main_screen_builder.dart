@@ -22,12 +22,16 @@ class MainScreenBuilder extends StatelessWidget {
           duration: Duration(milliseconds: 500),
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   TimeSelector(),
-                  AnimatedCountdown(),
+                  AnimatedCountdown(
+                    minutes: vm.getMinutes(),
+                    seconds: vm.getSeconds(),
+                  ),
                 ],
               ),
             ),
