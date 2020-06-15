@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_timer/model/workout_timer_dto.dart';
 import 'package:workout_timer/view/bloc/timer_bloc.dart';
+import 'package:workout_timer/view/screens/edit_screen.dart';
 import 'package:workout_timer/viewmodel/timer_vm.dart';
 
 class StoppedCountdown extends StatelessWidget {
@@ -18,25 +19,33 @@ class StoppedCountdown extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               SizedBox(),
-              Align(
-                alignment: FractionalOffset.center,
-                child: AspectRatio(
-                  aspectRatio: 1.0,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: TimerPainter(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return EditScreen();
+                  }));
+                },
+                child: Align(
+                  alignment: FractionalOffset.center,
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: TimerPainter(),
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: FractionalOffset.center,
-                        child: Text(
-                          '${(snapshot.data.minutes).toString().padLeft(2, '0')}:${(snapshot.data.seconds).toString().padLeft(2, '0')}',
-                          style: themeData.textTheme.headline1,
+                        Align(
+                          alignment: FractionalOffset.center,
+                          child: Text(
+                            '${(snapshot.data.minutes).toString().padLeft(2, '0')}:${(snapshot.data.seconds).toString().padLeft(2, '0')}',
+                            style: themeData.textTheme.headline1,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
