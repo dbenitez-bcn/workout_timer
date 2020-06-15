@@ -1,40 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:workout_timer/view/bloc/timer_bloc.dart';
-import 'package:workout_timer/viewmodel/timer_vm.dart';
 
 class EditScreen extends StatelessWidget {
+  final Function(int, int) onSave;
+
+  EditScreen({this.onSave});
+
+  int seconds = 0;
+  int minutes = 0;
+
   @override
   Widget build(BuildContext context) {
-    TimerVM vm = TimerBloc.of(context).vm;
-
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          SizedBox(),
-          TimeSelector(),
-          MaterialButton(
-            color: Theme.of(context).primaryColor,
-            child: Text("Ok"),
-            onPressed: () {
-              vm.setWorkoutTime(1, 30);
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      )
-    );
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        SizedBox(),
+        TimeSelector(
+          setMinutes: setMinutes,
+          setSeconds: setSeconds,
+        ),
+        MaterialButton(
+          color: Theme.of(context).primaryColor,
+          child: Text("Ok"),
+          onPressed: () {
+            this.onSave(this.minutes, this.seconds);
+            Navigator.of(context).pop();
+          },
+        )
+      ],
+    ));
+  }
+
+  void setMinutes(value) {
+    this.minutes = value;
+  }
+
+  void setSeconds(value) {
+    this.seconds = value;
   }
 }
 
 class TimeSelector extends StatelessWidget {
+  final ValueChanged<int> setMinutes;
+  final ValueChanged<int> setSeconds;
+
+  TimeSelector({this.setMinutes, this.setSeconds});
+
   Widget _buildMinutes(BuildContext context) {
     return PageView(
       physics: BouncingScrollPhysics(),
       scrollDirection: Axis.vertical,
       controller: PageController(viewportFraction: 0.2),
+      onPageChanged: this.setMinutes,
       children:
-      List<Widget>.generate(100, (index) => NumberDigit(value: index)),
+          List<Widget>.generate(100, (index) => NumberDigit(value: index)),
     );
   }
 
@@ -43,6 +62,7 @@ class TimeSelector extends StatelessWidget {
       physics: BouncingScrollPhysics(),
       scrollDirection: Axis.vertical,
       controller: PageController(viewportFraction: 0.2),
+      onPageChanged: this.setSeconds,
       children: List<Widget>.generate(60, (index) => NumberDigit(value: index)),
     );
   }
@@ -72,7 +92,6 @@ class TimeSelector extends StatelessWidget {
     );
   }
 }
-
 
 class NumberDigit extends StatelessWidget {
   final int value;
