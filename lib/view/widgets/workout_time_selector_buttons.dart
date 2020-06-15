@@ -5,8 +5,8 @@ import 'package:workout_timer/viewmodel/timer_vm.dart';
 
 
 
-class TimeSelector extends StatelessWidget {
-  const TimeSelector({
+class WorkoutTimeSelectorButtons extends StatelessWidget {
+  const WorkoutTimeSelectorButtons({
     Key key,
   }) : super(key: key);
 
